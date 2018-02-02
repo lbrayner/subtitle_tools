@@ -1,0 +1,9 @@
+#!/usr/bin/env python3
+
+import sys
+from html2text import html2text
+
+markup_file = open(sys.argv[1], "r") 
+
+for line in markup_file: 
+    print(html2text(line).rstrip("\n")) 

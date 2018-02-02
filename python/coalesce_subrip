@@ -1,0 +1,34 @@
+#!/usr/bin/env python3
+
+import sys
+import pysrt
+import os
+from pysrt.srtfile import SubRipFile
+from pysrt.srtitem import SubRipItem
+
+script = sys.argv[0]
+args = sys.argv[1:]
+
+def usage():
+    return "%s FILE STARTING_POINT\n" % os.path.basename(script)
+
+if len(args) < 1:
+    sys.stdout.write(usage())
+    sys.exit(1)
+
+modified_subs = SubRipFile()
+subs = SubRipFile.open(args[0])
+starting_point = int(args[1])
+index = 0
+
+for x in range(starting_point, len(subs), 2):
+    if x >= len(subs):
+        break
+    item1 = subs[x-1]
+    item2 = subs[x]
+    index += 1
+    coalesced_item = SubRipItem(index,item1.start,item2.end,item1.text + '\n' + item2.text)
+    modified_subs.append(coalesced_item)
+
+for item in  modified_subs:
+    print (item)
